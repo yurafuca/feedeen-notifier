@@ -16,7 +16,8 @@
         "unlimitedStorage", 
         "notifications", 
         "tabs",
-        "background"
+        "background",
+        "alarms"
     ],
     "background": {
 	    "page": "background.html"
