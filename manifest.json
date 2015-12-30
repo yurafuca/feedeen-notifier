@@ -1,12 +1,12 @@
 {
-    "name": "feedeenNotifier",
+    "name": "feedeen Notifier",
 	"manifest_version": 2,
-    "version": "1.0",
+    "version": "1.1",
      "browser_action": {
-	      "default_icon": "48.png",
+	      "default_icon": "24.png",
 	      "default_title": "open feedeen.com"
 	 },
-    "description": "Show unreed count of feedeen.com", 
+    "description": "Show unread count of feedeen.com", 
     "icons": {
         "24": "24.png", 
         "48": "48.png", 
@@ -21,17 +21,13 @@
     ],
     "background": {
         "persistent": true,
-	    "page": "background.html"
+	    "scripts": ["jquery-2.1.4.min.js", "background.js"]
 	},
     "content_scripts": [
-	{
-	    "matches": ["*://www.feedeen.com/*"],
-	    "js": ["jquery-2.1.4.js", "content.js"],
-        "run_at": "document_end"
-	}
-    ],
-    "web_accessible_resources": [
-        "feedeen.html",
-        "feedeen.js"
-  ]
+        {
+            "matches": ["*://www.feedeen.com/*"],
+            "js": ["jquery-2.1.4.min.js", "content.js"],
+            "run_at": "document_end"
+        }
+    ]
 }
