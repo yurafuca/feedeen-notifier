@@ -9,7 +9,7 @@ feedeen.comの未読数をツールバー上に表示します．
 
 ## Demo
 
-![Alt Text](http://fast-uploader.com/transfer/7007058108830.gif)
+![Alt Text](http://fast-uploader.com/transfer/7007059375844.gif?key=)
 
 ## Licence
 
