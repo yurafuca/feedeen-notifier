@@ -1,12 +1,10 @@
 var feedeenTab = null;
 chrome.alarms.create("reload", {periodInMinutes: 1} );
 
-
 chrome.alarms.onAlarm.addListener(function(alarm) {
      if ( alarm.name == "reload" ) {
           if (feedeenTab != null) {
-              chrome.tabs.update(feedeenTab.id, {url: "https://www.feedeen.com/d#starred"});
-              console.log("ok");
+              chrome.tabs.update(feedeenTab.id, {url: "https://www.feedeen.com/d#starred"}, function() {});
           }
      }
 });
@@ -29,10 +27,11 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   run();
 });
 
-// feedeenが閉じられたとき
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-    if (tabId == feedeenTab.id) {
-        createFeedeenTab();
+    if (feedeenTab != null) {
+        if (tabId == feedeenTab.id) {
+            createFeedeenTab();
+        }
     }
 });
 
