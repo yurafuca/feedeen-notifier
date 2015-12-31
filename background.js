@@ -1,5 +1,14 @@
+// TODO:
+// リロード間隔の設定
+// タブを閉じることを許すか
+// ボタンをクリックした時のジャンプ先
+// 要素の監視 <- unreadsが変わったタイミングでonUpdateされるらしいから必要ないかもしれない
+
 var feedeenTab = null;
+var lastUnreads = 0;
 chrome.alarms.create("reload", {periodInMinutes: 1} );
+chrome.browserAction.setBadgeBackgroundColor({ color: "#498AF4"});
+reflectUnreadCount('+');
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
      if ( alarm.name == "reload" ) {
@@ -49,15 +58,38 @@ function reflectUnreadCount(unreads) {
     chrome.browserAction.setBadgeText({text: String(unreads)});
 }
 
+chrome.notifications.onClicked.addListener(function (notificationId) {
+    if (notificationId == 'newItem') {
+        run();
+    }
+});
+
 function getUnreadCount(tab) {
     chrome.tabs.sendMessage(tab.id, {method: "getUnreads"}, function(response) {
         if (chrome.runtime.lastError) {
-            //console.log(chrome.runtime.lastError.message);
+            // connection failed :(
             reflectUnreadCount('err');
         } else {
             // successed :)
-            //console.log('response.unreadsCount:' + response.unreadsCount);
-            reflectUnreadCount(response.unreadsCount);
+            if (response.unreadsCount == 0) {
+                reflectUnreadCount('');
+            } else {
+                reflectUnreadCount(response.unreadsCount);
+            }
+            // show notification
+            var diff = response.unreadsCount - lastUnreads;
+            lastUnreads = response.unreadsCount;
+            if (diff > 0) {
+                chrome.notifications.create(
+                'newItem',{   
+                    type: 'basic', 
+                    iconUrl: '96.png', 
+                    title: 'New feeds', 
+                    message: 'You have ' + diff + ' new feeds.',
+                    priority: 0},
+                function() { /* Error checking goes here */} 
+                );
+            }
         }
   });
 }

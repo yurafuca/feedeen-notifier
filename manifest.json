@@ -17,7 +17,8 @@
         "notifications", 
         "tabs",
         "background",
-        "alarms"
+        "alarms",
+        "notifications"
     ],
     "background": {
         "persistent": true,
@@ -29,5 +30,8 @@
             "js": ["jquery-2.1.4.min.js", "content.js"],
             "run_at": "document_end"
         }
+    ],
+    "web_accessible_resources": [
+        "96.png"
     ]
 }
