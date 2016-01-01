@@ -6,9 +6,12 @@
 
 var feedeenTab = null;
 var lastUnreads = 0;
-chrome.alarms.create("reload", {periodInMinutes: 1} );
-chrome.browserAction.setBadgeBackgroundColor({ color: "#498AF4"});
-reflectUnreadCount('+');
+
+$(function(){
+    chrome.alarms.create("reload", {periodInMinutes: Number(getItem('reloadTime'))} );
+    chrome.browserAction.setBadgeBackgroundColor({ color: "#498AF4"});
+    reflectUnreadCount('open');
+});
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   run();
@@ -22,7 +25,7 @@ function run() {
 }
 
 function createFeedeenTab() {
-    chrome.tabs.create({url: "https://www.feedeen.com/d#starred"}, function(tab) {
+    chrome.tabs.create({url: getItem('jumpTo')}, function(tab) {
         feedeenTab = $.extend(true, {}, tab);
         chrome.tabs.update(feedeenTab.id, {pinned: true})
     });
@@ -75,7 +78,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     if (feedeenTab != null) {
         if (tabId == feedeenTab.id) {
-            createFeedeenTab();
+            if (getItem('reopen') == 'true')
+                createFeedeenTab();
+            else {
+                feedeenTab = null;
+                reflectUnreadCount('open');
+            }
         }
     }
 });
@@ -83,7 +91,7 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
 chrome.alarms.onAlarm.addListener(function(alarm) {
      if ( alarm.name == "reload" ) {
           if (feedeenTab != null) {
-              chrome.tabs.update(feedeenTab.id, {url: "https://www.feedeen.com/d#starred"}, function() {});
+              chrome.tabs.update(feedeenTab.id, {url: getItem('jumpTo')}, function() {});
           }
      }
 });

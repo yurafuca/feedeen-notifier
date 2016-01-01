@@ -22,7 +22,7 @@
     ],
     "background": {
         "persistent": true,
-	    "scripts": ["jquery-2.1.4.min.js", "background.js"]
+	    "scripts": ["jquery-2.1.4.min.js", "background.js", "options.js"]
 	},
     "content_scripts": [
         {
@@ -31,7 +31,9 @@
             "run_at": "document_end"
         }
     ],
+    "options_page": "options.html",
     "web_accessible_resources": [
-        "96.png"
+        "96.png",
+        "options.js"
     ]
 }
