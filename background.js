@@ -1,22 +1,21 @@
-// TODO:
-// リロード間隔の設定
-// タブを閉じることを許すか
-// ボタンをクリックした時のジャンプ先
-// 要素の監視 <- unreadsが変わったタイミングでonUpdateされるらしいから必要ないかもしれない
-
 var feedeenTab = null;
 var lastUnreads = 0;
+var emptyMessage = 'open';
+var unreadsObserver = null;
 
 $(function(){
-    chrome.alarms.create("reload", {periodInMinutes: Number(getItem('reloadTime'))} );
+    // バッジの色を変更
     chrome.browserAction.setBadgeBackgroundColor({ color: "#498AF4"});
-    reflectUnreadCount('open');
+    // タブが開かれていない旨をバッジに表示
+    reflectUnreadCount(emptyMessage);
+    
 });
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   run();
 });
 
+// タブを開き直す
 function run() {
     if (feedeenTab != null) {
         chrome.tabs.remove(feedeenTab.id, function(tab) {});
@@ -24,18 +23,30 @@ function run() {
     createFeedeenTab();
 }
 
+// タブを生成する
 function createFeedeenTab() {
-    chrome.tabs.create({url: getItem('jumpTo')}, function(tab) {
+    chrome.tabs.create({url: getSetting('jumpTo')}, function(tab) {
         feedeenTab = $.extend(true, {}, tab);
-        chrome.tabs.update(feedeenTab.id, {pinned: true})
+        // 監視
+        unreadsObserver = new MutationObserver(getUnreadCount);
+        chrome.tabs.sendMessage(tab.id, {method: "getCounter"}, function(response) {
+            console.log(chrome.runtime.lastError);
+            var config = { attributes: true, childList: true, characterData: true };
+            unreadsObserver.observe(response.counter, config);
+            unreadsObserver.observe();
+        });
+        // タブを自動的に固定する
+        if (getSetting('pinTab') == 'true') {
+            chrome.tabs.update(feedeenTab.id, {pinned: true})
+        }
     });
 }
 
 function reflectUnreadCount(unreads) {
-    //console.log('unreads:' + unreads);
     chrome.browserAction.setBadgeText({text: String(unreads)});
 }
 
+// 未読数を取得し反映する．未読数が増加した場合通知を出す．
 function getUnreadCount(tab) {
     chrome.tabs.sendMessage(tab.id, {method: "getUnreads"}, function(response) {
         if (chrome.runtime.lastError) {
@@ -65,40 +76,44 @@ function getUnreadCount(tab) {
         }
   });
 }
-
+/*
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    // タブが更新されたら未読数を取得し直す
     if (tabId == feedeenTab.id) {
         if (tab.status == "complete") {
-            //console.log("created tab's id: " + feedeenTab.id);
             getUnreadCount(feedeenTab);
         }
     }
 });
-
+*/
 chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+    // タブを開き直す設定が有効の場合タブを開き直す
     if (feedeenTab != null) {
         if (tabId == feedeenTab.id) {
-            if (getItem('reopen') == 'true')
+            if (getSetting('reopen') == 'true')
                 createFeedeenTab();
             else {
                 feedeenTab = null;
-                reflectUnreadCount('open');
+                reflectUnreadCount(emptyMessage);
             }
         }
     }
 });
 
-chrome.alarms.onAlarm.addListener(function(alarm) {
-     if ( alarm.name == "reload" ) {
-          if (feedeenTab != null) {
-              chrome.tabs.update(feedeenTab.id, {url: getItem('jumpTo')}, function() {});
-          }
-     }
-});
-
 chrome.notifications.onClicked.addListener(function (notificationId) {
+    // 通知をクリックしたら feedeen を開く
     if (notificationId == 'newItem') {
         chrome.notifications.clear(notificationId, function() {});
         run();
+    }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    // content_script へ設定を渡す
+    if (request.method && (request.method === "getSetting")) {
+        if (request.item == 'hiddenBar') {
+            sendResponse({ 'value': getSetting('hiddenBar')});
+        }
+        return true; // necessary for settimeout.
     }
 });

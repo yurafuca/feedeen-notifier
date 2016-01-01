@@ -1,64 +1,72 @@
-// 標準値
-var default_jumpTo = "https://www.feedeen.com/d#starred";
-var default_reloadTime = "5";
-var default_reopen = "true"
+var defaultSetting = {
+    jumpTo : "https://www.feedeen.com/d#starred",
+    reloadTime : "5",
+    reopen : "true",
+    pinTab : "true",
+    hiddenBar : "false"
+}
 
-var getItem = function(key) {
+var getSetting = function(key) {
     return localStorage.getItem(key)
 }
-var setItem = function(key, value) {
+var setSetting = function(key, value) {
     localStorage.setItem(key, value)
 }
 var resetAll = function() {
-    setItem('reopen', default_reopen);
-    setItem('jumpTo', default_jumpTo);
-    setItem('reloadTime', default_reloadTime);
+    for (var item in defaultSetting) {
+        setSetting(item, defaultSetting[item]);
+    }
 }
 var reflectStorage = function() {
-    if(getItem('reopen') == 'true') {
+    if(getSetting('reopen') == 'true') {
         $('input[name=reopen]:eq(0)').prop('checked', true);
     } else {
         $('input[name=reopen]:eq(1)').prop('checked', true);
     }
-    //$('input[name=reopen]').val(getItem('reopen'));
-    $('#jumpTo').attr('value', getItem('jumpTo'));
-    $('#reloadTime').attr('value', getItem('reloadTime'));
+    if(getSetting('pinTab') == 'true') {
+        $('input[name=pinTab]:eq(0)').prop('checked', true);
+    } else {
+        $('input[name=pinTab]:eq(1)').prop('checked', true);
+    }
+    $('#jumpTo').attr('value', getSetting('jumpTo'));
+    $('#reloadTime').attr('value', getSetting('reloadTime'));
+    if(getSetting('hiddenBar') == 'true') {
+        $('input[name=hiddenBar]:eq(0)').prop('checked', true);
+    } else {
+        $('input[name=hiddenBar]:eq(1)').prop('checked', true);
+    }
+}
+var setItemAll = function(obj) {
+    for (var item in obj) {
+        setSetting(item, obj[item]);
+    }
 }
 $(function(){
     // 初期設定
-    if (getItem('reopen') == null) {
+    if (getSetting('reopen') == null) {
         resetAll();
     }
     // 設定の反映
     reflectStorage();
-    // オプションデータの更新
+    // 設定の保存
     $('#put').click(function() {
-        var reopen;
-        if ($('input[name=reopen]:checked').val() === 'enable') {
-            reopen = true;
-        } else {
-            reopen = false;
-        }
-        var jumpTo = $('#jumpTo').val();
-        var reloadTime = $('#reloadTime').val();
-        
-                console.log(reopen);
-        console.log(jumpTo);
-        console.log(reloadTime);
-        
-        setItem('reopen', reopen);
-        setItem('jumpTo', jumpTo);
-        setItem('reloadTime', reloadTime);
-        
-        console.log(getItem('reopen'));
-        console.log(getItem('jumpTo'));
-        console.log(getItem('reloadTime'));
-        
-        alert("Update OK");
+        var setting = new Object();
+        setting.reopen = ($('input[name=reopen]:checked').val() === 'enable') ? true : false;
+        setting.pinTab = ($('input[name=pinTab]:checked').val() === 'enable') ? true : false;
+        setting.jumpTo = $('#jumpTo').val();
+        setting.reloadTime = $('#reloadTime').val();
+        setting.hiddenBar = ($('input[name=hiddenBar]:checked').val() === 'enable') ? true : false;
+        setItemAll(setting);
+        // 結果の表示
+        $('#console').text('Saved.')
+        setTimeout(function() {$('#console').text('')}, 1000);
     });
-    // オプションデータの更新
+    // 設定のリセット
     $('#reset').click(function() {
         resetAll();
         reflectStorage();
+        // 結果の表示
+        $('#console').text('Resetted.')
+        setTimeout(function() {$('#console').text('')}, 1000);
     });
 });

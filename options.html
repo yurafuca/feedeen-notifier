@@ -1,20 +1,31 @@
 <script src="jquery-2.1.4.min.js"></script>
 <script src="options.js"></script>
-<h1>Option</h1>
-<p>タブを閉じたとき開き直す<br>
+<h1>feedeen Notifier</h1>
+<p style="color: #f00;">※ このエクステンションは feedeen の設定画面で「定期的な自動リロード」を有効にして使用する必要があります．</p>
+<h3>タブを閉じたとき開き直す</h3>
 <input type="radio" name="reopen" value="enable"> enable
 <input type="radio" name="reopen" value="disable"> disable
-</p>
-<p>ボタンをクリックしたときの移動先<br>
+<h3>タブを自動的に固定する</h3>
+<input type="radio" name="pinTab" value="enable"> enable
+<input type="radio" name="pinTab" value="disable"> disable
+<h3>ボタンをクリックしたときの移動先</h3>
 <input id="jumpTo" type="text" style="width:500px"/>
-</p>
-<p>リロード間隔<br>
+<h3>「定期的な自動リロード」のプログレスバーを非表示にする</h3>
+<input type="radio" name="hiddenBar" value="enable"> enable
+<input type="radio" name="hiddenBar" value="disable"> disable
+<!--
+<h2>リロード間隔</h2>
 <select id="reloadTime">
+<option value="3">3分</option>
 <option value="5">5分</option>
 <option value="10">10分</option>
 <option value="30">30分</option>
 <option value="60">60分</option>
 </select>
-</p>
+-->
+<hr>
+<p>
 <input id="put" type="submit" value="Save" />
 <input id="reset" type="submit" value="Reset" />
+</p>
+<p id="console" style="color: #228b22;"></p>
