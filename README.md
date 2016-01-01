@@ -1,6 +1,8 @@
 feedeen-notifier
 ====
 
+![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/badge.png)
+
 feedeen.comの未読数をツールバー上に表示します．
 
 ## Description
@@ -13,8 +15,8 @@ feedeen-notifierは新着通知に対応しています．新たなフィード�
 
 ## Demo
 
-![Alt Text](http://fast-uploader.com/transfer/7007126995211.gif)
-![Alt Text](http://fast-uploader.com/transfer/7007127069832.gif)
+![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/demo.gif)
+![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/notification.gif)
 
 ## Licence
 
