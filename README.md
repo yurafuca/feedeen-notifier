@@ -1,7 +1,7 @@
-feedeen-notifier
+﻿feedeen-notifier
 ====
 
-![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/badge.png)
+![Alt Text](https://github.com/amagomori/screenshots/blob/master/feedeen-notification/badge.png)
 
 feedeen.comの未読数をツールバー上に表示します．
 
@@ -15,8 +15,8 @@ feedeen-notifierは新着通知に対応しています．新たなフィード�
 
 ## Demo
 
-![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/demo.gif)
-![Alt Text](https://github.com/furafy/screenshots/blob/master/feedeen-notification/notification.gif)
+![Alt Text](https://github.com/amagomori/screenshots/blob/master/feedeen-notification/demo.gif)
+![Alt Text](https://github.com/amagomori/screenshots/blob/master/feedeen-notification/notification.gif)
 
 ## Licence
 
@@ -24,4 +24,4 @@ feedeen-notifierは新着通知に対応しています．新たなフィード�
 
 ## Author
 
-[furafy](https://github.com/furafy)
+[amagomori](https://github.com/amagomori)
