@@ -15,7 +15,6 @@ feedeen-notifierは新着通知に対応しています．新たなフィード�
 
 ## Demo
 
-![Alt Text](https://github.com/amagomori/screenshots/blob/master/feedeen-notification/demo.gif)
 ![Alt Text](https://github.com/amagomori/screenshots/blob/master/feedeen-notification/notification.gif)
 
 ## Licence
